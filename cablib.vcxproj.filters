@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="utils">
+      <UniqueIdentifier>{31bff50b-0c8d-4080-bcbd-163982cabc61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="sources\extract">
+      <UniqueIdentifier>{88bc5d49-0dce-4fbf-b771-907b52dc4ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\compress">
+      <UniqueIdentifier>{d63db7d6-a4d0-4a7f-bf55-96772cf8fe73}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="string_utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="system_utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_buffer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="buffer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="extract_file_item.cpp">
+      <Filter>sources\extract</Filter>
+    </ClCompile>
+    <ClCompile Include="extractor.cpp">
+      <Filter>sources\extract</Filter>
+    </ClCompile>
+    <ClCompile Include="extract_file_worker.cpp">
+      <Filter>sources\extract</Filter>
+    </ClCompile>
+    <ClCompile Include="extract_memory_item.cpp">
+      <Filter>sources\extract</Filter>
+    </ClCompile>
+    <ClCompile Include="extract_memory_worker.cpp">
+      <Filter>sources\extract</Filter>
+    </ClCompile>
+    <ClCompile Include="compressor.cpp">
+      <Filter>sources\compress</Filter>
+    </ClCompile>
+    <ClCompile Include="cablib.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="system_utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="string_utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_buffer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="buffer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="dll.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_file_item.h">
+      <Filter>sources\extract</Filter>
+    </ClInclude>
+    <ClInclude Include="extractor.h">
+      <Filter>sources\extract</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_worker.h">
+      <Filter>sources\extract</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_file_worker.h">
+      <Filter>sources\extract</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_item.h">
+      <Filter>sources\extract</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_memory_item.h">
+      <Filter>sources\extract</Filter>
+    </ClInclude>
+    <ClInclude Include="extract_memory_worker.h">
+      <Filter>sources\extract</Filter>
+    </ClInclude>
+    <ClInclude Include="compressor.h">
+      <Filter>sources\compress</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

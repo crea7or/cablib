@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="compress">
+      <UniqueIdentifier>{8188bebd-2f4b-4e5d-920a-7806ee4ae9af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{989a5738-9719-48ae-ad86-ac92589345bd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="compressor.cpp">
+      <Filter>compress</Filter>
+    </ClCompile>
+    <ClCompile Include="string_utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="system_utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="makecabx.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compressor.h">
+      <Filter>compress</Filter>
+    </ClInclude>
+    <ClInclude Include="dll.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="string_utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="system_utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
