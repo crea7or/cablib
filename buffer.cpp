@@ -11,17 +11,21 @@ namespace
 
 buffer::buffer(const size_t size)
 {
-  allocate(size);
+  if (size > 0)
+  {
+    allocate_copy(size);
+  }
+  // zero sized buffer is not an error
 }
 
-buffer::buffer(const uint8_t* ptr, const size_t size, TYPE type)
+buffer::buffer(const uint8_t* ptr, const size_t size, const TYPE type)
 {
   set(ptr, size, type);
 }
 
 buffer::buffer(const buffer& src)
 {
-  if (KEEPER == buffer_type)
+  if (KEEPER == src.buffer_type)
   {
     // just copy ptr, size and type
     // doesn't hold memory
@@ -30,20 +34,20 @@ buffer::buffer(const buffer& src)
   }
   else
   {
-    // allocate new memory if source is holder also copy from buffer
-    allocate(src.buffer_size, src.buffer_ptr);
+    // so we should allocate and copy the memory if the source hold it
+    if (src.buffer_size > 0 && src.buffer_ptr != nullptr)
+    {
+      // allocate new memory if source is holder also copy from buffer
+      allocate_copy(src.buffer_size, src.buffer_ptr);
+    }
+    // zero sized buffer is not an error
   }
   buffer_type = src.buffer_type;
 }
 
-buffer::buffer(buffer&& src) noexcept
+buffer::buffer(buffer&& src) noexcept : buffer()
 {
-  buffer_ptr = src.buffer_ptr;
-  buffer_size = src.buffer_size;
-  buffer_type = src.buffer_type;
-  // leave src in correct, empty state
-  src.buffer_ptr = nullptr;
-  src.buffer_size = 0;
+  swap(*this, src);
 }
 
 buffer::~buffer()
@@ -51,20 +55,23 @@ buffer::~buffer()
   destroy();
 }
 
-void buffer::allocate(const size_t size, const uint8_t* ptr)
+void buffer::allocate_copy(const size_t size, const uint8_t* copy_from_ptr)
 {
-  destroy();
   if (size > 0)
   {
-    buffer_ptr = (uint8_t*)malloc(size);
-    if (nullptr != buffer_ptr)
+    uint8_t* new_buffer_ptr = (uint8_t*)malloc(size);
+    if (nullptr != new_buffer_ptr)
     {
+      // now we can destroy old buffer
+      destroy();
+      // assign new buffer to current
+      buffer_ptr = new_buffer_ptr;
       buffer_size = size;
       // now we're holder
       buffer_type = HOLDER;
-      if (ptr != nullptr)
+      if (copy_from_ptr != nullptr)
       {
-        memcpy(buffer_ptr, ptr, size);
+        memcpy(buffer_ptr, copy_from_ptr, size);
       }
     }
     else
@@ -88,18 +95,22 @@ void buffer::destroy() noexcept
   buffer_size = 0;
 }
 
-// KEEPER - memory viewer (does not own nor manage memeory)
+// KEEPER - memory viewer (does not own nor manage memory)
 // HOLDER - allocate new memory for data and copy it to this memory
 void buffer::set(const uint8_t* ptr, const size_t size, TYPE type)
 {
-  destroy();
-  if (nullptr != ptr && size > 0 && HOLDER == type)
+  if (HOLDER == type)
   {
-    // allocate new memory if source is holder also copy from buffer
-    allocate(size, ptr);
+    if (nullptr != ptr && size > 0)
+    {
+      // allocate new memory if source is holder also copy from buffer
+      // allocate will destroy old data
+      allocate_copy(size, ptr);
+    }
   }
   else
   {
+    destroy();
     // keeper just use supplied ptr and size
     buffer_ptr = const_cast<uint8_t*>(ptr);  // workaround for keeper unmodified buffer
     buffer_size = size;
@@ -109,7 +120,8 @@ void buffer::set(const uint8_t* ptr, const size_t size, TYPE type)
 
 void buffer::resize(const size_t new_size, bool copy)
 {
-  if (KEEPER == buffer_type)
+  // allow resize of empty KEEPER
+  if (KEEPER == buffer_type && !empty())
   {
     throw std::logic_error(resizeForKeeper);
   }
@@ -136,6 +148,7 @@ void buffer::resize(const size_t new_size, bool copy)
         // assign new buffer to current
         buffer_ptr = new_buffer_ptr;
         buffer_size = new_size;
+        // important to set the holder, because we can be here from empty KEEPER
         buffer_type = HOLDER;
       }
       else
@@ -149,6 +162,16 @@ void buffer::resize(const size_t new_size, bool copy)
       destroy();
     }
   }
+}
+
+buffer& buffer::operator=(const buffer& src)
+{
+  if (&src != this)
+  {
+    buffer temporary(src);
+    swap(*this, temporary);
+  }
+  return *this;
 }
 
 uint8_t& buffer::operator[](std::size_t idx)
@@ -190,7 +213,22 @@ void buffer::clear() noexcept
   destroy();
 }
 
+bool buffer::empty() const noexcept
+{
+  return nullptr == buffer_ptr || 0 == buffer_size;
+}
+
 buffer::TYPE buffer::type() const noexcept
 {
   return buffer_type;
+}
+
+ptr_iterator<uint8_t> buffer::begin() const
+{
+  return ptr_iterator<uint8_t>(data());
+}
+
+ptr_iterator<uint8_t> buffer::end() const
+{
+  return ptr_iterator<uint8_t>(data() + size());
 }
