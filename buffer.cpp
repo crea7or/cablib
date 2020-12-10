@@ -11,10 +11,7 @@ namespace
 
 buffer::buffer(const size_t size)
 {
-  if (size > 0)
-  {
-    allocate_copy(size);
-  }
+  allocate_copy(size);
   // zero sized buffer is not an error
 }
 
@@ -35,12 +32,8 @@ buffer::buffer(const buffer& src)
   else
   {
     // so we should allocate and copy the memory if the source hold it
-    if (src.buffer_size > 0 && src.buffer_ptr != nullptr)
-    {
-      // allocate new memory if source is holder also copy from buffer
-      allocate_copy(src.buffer_size, src.buffer_ptr);
-    }
-    // zero sized buffer is not an error
+    // allocate new memory if source is holder also copy from buffer
+    allocate_copy(src.buffer_size, src.buffer_ptr);
   }
   buffer_type = src.buffer_type;
 }
@@ -81,7 +74,8 @@ void buffer::allocate_copy(const size_t size, const uint8_t* copy_from_ptr)
   }
   else
   {
-    throw std::logic_error(zeroBuffer);
+    // zero size allocate effectively just destroying the old data if any
+    destroy();
   }
 }
 
@@ -101,15 +95,13 @@ void buffer::set(const uint8_t* ptr, const size_t size, TYPE type)
 {
   if (HOLDER == type)
   {
-    if (nullptr != ptr && size > 0)
-    {
-      // allocate new memory if source is holder also copy from buffer
-      // allocate will destroy old data
-      allocate_copy(size, ptr);
-    }
+    // allocate new memory if source is holder also copy from buffer
+    // allocate will destroy old data
+    allocate_copy(size, ptr);
   }
   else
   {
+    // KEEPER
     destroy();
     // keeper just use supplied ptr and size
     buffer_ptr = const_cast<uint8_t*>(ptr);  // workaround for keeper unmodified buffer
@@ -148,7 +140,7 @@ void buffer::resize(const size_t new_size, bool copy)
         // assign new buffer to current
         buffer_ptr = new_buffer_ptr;
         buffer_size = new_size;
-        // important to set the holder, because we can be here from empty KEEPER
+        // important to set the holder, because we can be here from empty KEEPER(default constructed buffer)
         buffer_type = HOLDER;
       }
       else
